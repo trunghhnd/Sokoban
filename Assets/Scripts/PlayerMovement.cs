@@ -11,6 +11,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TileBase boxTile;
     [SerializeField] private GameManager gameManager;
     private Animator anim;
+    private Vector2 touchStartPos;
+    private Vector2 touchEndPos;
+    [SerializeField] private float swipeThreshold = 50f;
     class MoveData
     {
         public Vector3 playerPos;
@@ -28,6 +31,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void Update()
     {
+        HandleSwipe();
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             Move(Vector3Int.up);
@@ -97,6 +101,56 @@ public class PlayerMovement : MonoBehaviour
         {
             objectMap.SetTile(data.newBoxPos, null);
             objectMap.SetTile(data.oldBoxPos, boxTile);
+        }
+    }
+    private void HandleSwipe()
+    {
+        if (Input.touchCount == 0)
+            return;
+
+        Touch touch = Input.GetTouch(0);
+
+        switch (touch.phase)
+        {
+            case TouchPhase.Began:
+                touchStartPos = touch.position;
+                break;
+
+            case TouchPhase.Ended:
+                touchEndPos = touch.position;
+
+                Vector2 swipe = touchEndPos - touchStartPos;
+
+                if (swipe.magnitude < swipeThreshold)
+                    return;
+
+                if (Mathf.Abs(swipe.x) > Mathf.Abs(swipe.y))
+                {
+                    if (swipe.x > 0)
+                    {
+                        Move(Vector3Int.right);
+                        anim.Play("PlayerRight");
+                    }
+                    else
+                    {
+                        Move(Vector3Int.left);
+                        anim.Play("PlayerLeft");
+                    }
+                }
+                else
+                {
+                    if (swipe.y > 0)
+                    {
+                        Move(Vector3Int.up);
+                        anim.Play("PlayerUp");
+                    }
+                    else
+                    {
+                        Move(Vector3Int.down);
+                        anim.Play("PlayerDown");
+                    }
+                }
+                break;
         }
     }
 }

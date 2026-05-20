@@ -3,68 +3,96 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
-
+using TMPro;
+using Firebase;
+using Firebase.Analytics;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
+
     [SerializeField] private Tilemap groundMap;
     [SerializeField] private Tilemap objectMap;
+    [SerializeField] private TileBase wallTile;
+    [SerializeField] private TileBase floorTile;
     [SerializeField] private TileBase targetTile;
     [SerializeField] private TileBase boxTile;
+    [SerializeField] private GameObject player;
     [SerializeField] private GameObject UIplay;
     [SerializeField] private GameObject UIwin;
-    bool isWin = false;
-    [SerializeField] private MusicManager musicManager;
-    private void Start()
+    [SerializeField] private TextMeshProUGUI textStage;
+
+    public static int currentLevel = 1;
+
+    private bool isWin = false;
+    public int moveCount = 0;
+    public int undoCount = 0;
+    void Awake()
+    {
+        Instance = this;
+    }
+
+    void Start()
     {
         UIplay.SetActive(true);
         UIwin.SetActive(false);
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWith(task =>
+        {
+            if (task.Result == DependencyStatus.Available)
+            {
+                FirebaseAnalytics.SetAnalyticsCollectionEnabled(true);
+                AnalyticsManager.LogLevelStart(currentLevel);
+            }
+            else
+            {
+                Debug.LogError("Firebase không khởi tạo được: " + task.Result);
+            }
+        });
+        textStage.text = $"STAGE {currentLevel}";
+        LevelLoader.Load(currentLevel, groundMap, objectMap,
+                         wallTile, floorTile, targetTile, boxTile, player);
     }
+
     public void CheckWin()
     {
         if (isWin) return;
 
+        groundMap.CompressBounds();
+
         foreach (Vector3Int pos in groundMap.cellBounds.allPositionsWithin)
         {
-            if (groundMap.GetTile(pos) != targetTile)
-                continue;
-
-            if (objectMap.GetTile(pos) != boxTile)
-                return;
+            if (groundMap.GetTile(pos) != targetTile) continue;
+            if (objectMap.GetTile(pos) != boxTile) return;
         }
 
         isWin = true;
-        ShowWinUI();
-        musicManager.PlayWinMusic();
-        int currentLevel = UnityEngine.SceneManagement.SceneManager.GetActiveScene().buildIndex;
         LevelProgress.Unlock(currentLevel);
-    }
-    void ShowWinUI()
-    {
+        AnalyticsManager.LogLevelComplete(currentLevel);
         UIplay.SetActive(false);
         UIwin.SetActive(true);
-
         Time.timeScale = 0f;
     }
+
     public void RestartLevel()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("Level");
     }
-    public void Menu()
-    {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene("Menu");
-    }
+
     public void NextLevel()
     {
         Time.timeScale = 1f;
 
-        int current = SceneManager.GetActiveScene().buildIndex;
-        int next = current + 1;
+        int next = currentLevel + 1;
+        if (Resources.Load<TextAsset>("Levels/Level" + next) == null) return;
 
-        if (next < SceneManager.sceneCountInBuildSettings)
-            SceneManager.LoadScene(next);
+        currentLevel = next;
+        SceneManager.LoadScene("Level");
+    }
+
+    public void Menu()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Menu");
     }
 }

@@ -6,10 +6,10 @@ using UnityEngine.SceneManagement;
 
 public class LevelButton : MonoBehaviour
 {
-    [SerializeField] private int levelIndex;
+    public int levelIndex;
     [SerializeField] private Button button;
     [SerializeField] private Image buttonImage;
-    // Start is called before the first frame update
+
     void Start()
     {
         int unlocked = LevelProgress.GetUnlockedLevel();
@@ -26,13 +26,9 @@ public class LevelButton : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     public void PlayLevel()
     {
-        SceneManager.LoadScene(levelIndex);
+        GameManager.currentLevel = levelIndex;
+        SceneManager.LoadScene("Level");
     }
 }

@@ -5,10 +5,12 @@ using UnityEngine;
 public static class LevelProgress
 {
     private const string KEY = "UnlockedLevel";
+
     public static int GetUnlockedLevel()
     {
         return PlayerPrefs.GetInt(KEY, 1);
     }
+
     public static void Unlock(int levelIndex)
     {
         int current = GetUnlockedLevel();
