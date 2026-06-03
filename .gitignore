@@ -106,3 +106,5 @@ InitTestScene*.unity*
 /[Aa]ssets/[Ss]ceneDependencyCache*
 Assets/Firebase/Plugins/x86_64/*.bundle
 Assets/Firebase/Plugins/x86_64/*.so
+google-services.json
+Assets/google-services.json
