@@ -1,35 +1,41 @@
 # Sokoban Game
 
-A 2D puzzle game developed in Unity, inspired by the classic Sokoban gameplay where players push boxes to target positions to complete levels.
+A 2D puzzle game developed with Unity, inspired by the classic Sokoban gameplay. Players must strategically push boxes onto target positions to complete each level.
 
 ---
 
 # Features
-- Grid-based movement system
-- Box pushing mechanics
-- Level completion detection
-- Multiple levels and scene management
-- Background music and sound effects
-- Restart level functionality
-- Simple and clean pixel-art style
+
+* Grid-based movement system
+* Box pushing mechanics
+* Undo move functionality
+* Multiple levels loaded from external text files
+* Swipe controls for mobile devices
+* Level progression system
+* Background music and sound effects
+* Restart level functionality
+* Google AdMob Banner Ads integration
+* Firebase Analytics & Crashlytics integration
 
 ---
 
 # Tech Stack
-- Unity Engine
-- C# scripting
-- Object-Oriented Programming (OOP)
-- Unity Tilemap System
-- Unity Physics 2D
-- Git & GitHub
-
+* Unity Engine (2D)
+* C#
+* Object-Oriented Programming (OOP)
+* Unity Tilemap System
+* Scene Management
+* Firebase Analytics
+* Google AdMob
+* Git & GitHub
 ---
 
 # Gameplay
-- Control the player character
-- Push all boxes onto target tiles
-- Solve puzzles with limited movement space
-- Complete levels to progress
+* Swipe to move the player
+* Push boxes onto target tiles
+* Solve puzzles with limited movement space
+* Complete levels to unlock the next challenge
+* Use Undo to revert previous moves
 
 ---
 
@@ -51,4 +57,4 @@ A 2D puzzle game developed in Unity, inspired by the classic Sokoban gameplay wh
 - Role: Game Developer (Unity)
 - GitHub: https://github.com/trunghhnd
 - Itch: https://trunghhnd.itch.io/sokoban
-- Youtube: https://www.youtube.com/watch?v=vTPfS0Gv7d4
+- Video: https://tinyurl.com/bdhfx6xm
